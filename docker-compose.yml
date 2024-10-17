@@ -1,0 +1,26 @@
+version: '3.4'  # Specify the version of Docker Compose
+
+services:
+  productservice:
+    build:
+      context: ./ProductService  # Path to the ProductService folder
+      dockerfile: Dockerfile      # Dockerfile for ProductService
+    ports:
+      - "8001:80"                 # Expose ProductService on port 8001
+    networks:
+      - microservices-network      # Network for inter-service communication
+
+  orderservice:
+    build:
+      context: ./OrderService      # Path to the OrderService folder
+      dockerfile: Dockerfile       # Dockerfile for OrderService
+    ports:
+      - "8002:80"                  # Expose OrderService on port 8002
+    depends_on:
+      - productservice             # Ensure ProductService is up before OrderService
+    networks:
+      - microservices-network       # Network for inter-service communication
+
+networks:
+  microservices-network:
+    driver: bridge                 # Use a bridge network
